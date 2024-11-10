@@ -7,7 +7,14 @@
 
 import UIKit
 
+protocol loginViewControllerDelegate: AnyObject{
+    func didLogin()
+    
+}
+
 class LoginViewController: UIViewController {
+    
+    weak var delegate : loginViewControllerDelegate?
     
     let loginView = LoginView()
     let signingUpButton = UIButton(type: .system)
@@ -26,6 +33,10 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         style()
         layout()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidLoad()
+        signingUpButton.configuration?.showsActivityIndicator = false
     }
     
     
@@ -53,13 +64,13 @@ extension LoginViewController {
         titleLabel.textColor = .black
         titleLabel.numberOfLines = 0
         titleLabel.text = "NetBanking"
-        titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
+        titleLabel.font = .systemFont(ofSize: 35, weight: .bold)
         
-        self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
         subtitleLabel.textColor = .black
         subtitleLabel.numberOfLines = 0
         subtitleLabel.textAlignment = .center
-        subtitleLabel.font = .systemFont(ofSize: 12, weight: .light)
+        subtitleLabel.font = .systemFont(ofSize: 15, weight: .light)
         subtitleLabel.text = "Your premium source for all kinds of banking needs!"
 
     }
@@ -72,18 +83,19 @@ extension LoginViewController {
         view.addSubview(signingUpButton)
         view.addSubview(errorMessageLabel)
         
+        //Login View Constraints
         NSLayoutConstraint.activate([
                 loginView.centerYAnchor
                     .constraint(equalTo: view.centerYAnchor),
                 loginView.leadingAnchor
                     .constraint(equalToSystemSpacingAfter: view.leadingAnchor,
-                                multiplier: 1),
+                                multiplier: 2),
                 view.trailingAnchor
                     .constraint(equalToSystemSpacingAfter: loginView.trailingAnchor,
-                                multiplier: 1)
+                                multiplier: 2)
                 ])
         
-
+        //SigningButton Constraints
         NSLayoutConstraint.activate([
             signingUpButton.topAnchor
                 .constraint(
@@ -94,8 +106,12 @@ extension LoginViewController {
                 .constraint(equalTo: loginView.leadingAnchor),
             signingUpButton.trailingAnchor
                 .constraint(equalTo: loginView.trailingAnchor),
+            
         ])
+        signingUpButton.layer.cornerRadius = 10
         
+        
+        //ErrorMessageLabel Constraints
         NSLayoutConstraint.activate([
             errorMessageLabel.topAnchor
                 .constraint(
@@ -108,29 +124,41 @@ extension LoginViewController {
                 .constraint(equalTo: loginView.trailingAnchor)
         ])
         
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor
-                .constraint(
-                    equalToSystemSpacingBelow: view.topAnchor,
-                    multiplier: 30
-                ),
-            titleLabel.leadingAnchor
-                .constraint(equalTo: loginView.leadingAnchor),
-            titleLabel.trailingAnchor
-                .constraint(equalTo: loginView.trailingAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
+        //TitleLabel Constraints
+        NSLayoutConstraint.activate(
+[
             subtitleLabel.topAnchor
                 .constraint(
                     equalToSystemSpacingBelow: titleLabel.bottomAnchor,
                     multiplier: 1
                 ),
-            subtitleLabel.leadingAnchor
+            titleLabel.leadingAnchor
                 .constraint(equalTo: loginView.leadingAnchor),
-            subtitleLabel.trailingAnchor
+            titleLabel.trailingAnchor
                 .constraint(equalTo: loginView.trailingAnchor)
-        ])
+        ]
+)
+        
+        //SubtitleLabel Constraints
+        NSLayoutConstraint.activate(
+[
+            loginView.topAnchor
+                .constraint(
+                    equalToSystemSpacingBelow: subtitleLabel.bottomAnchor,
+                    multiplier: 5
+                ),
+            subtitleLabel.leadingAnchor
+                .constraint(
+                    equalToSystemSpacingAfter: loginView.leadingAnchor,
+                    multiplier: 3
+                ),
+            view.trailingAnchor
+                .constraint(
+                    equalToSystemSpacingAfter: subtitleLabel.trailingAnchor,
+                    multiplier: 3
+                )
+        ]
+)
         
     }
 }
@@ -149,8 +177,9 @@ extension LoginViewController {
             showErrorMessage("Username / Password cannot be empty")
             return
         }
-        if userName == "Admin" && password == "Admin" {
+        if userName == "Admin" && password == "admin" {
             signingUpButton.configuration?.showsActivityIndicator = true
+            delegate?.didLogin()
         }else {
             showErrorMessage("Invalid Username / Password")
         }
