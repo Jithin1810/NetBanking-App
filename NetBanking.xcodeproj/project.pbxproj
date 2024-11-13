@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		5D87C5782CDCBCDF00887E89 /* Exceptions for "NetBanking" folder in "NetBanking" target */ = {
+		5D59174E2CE14F9B0009A030 /* Exceptions for "NetBanking" folder in "NetBanking" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -21,10 +21,10 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5D87C5682CDCBCDE00887E89 /* NetBanking */ = {
+		5D5917442CE14F9B0009A030 /* NetBanking */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				5D87C5782CDCBCDF00887E89 /* Exceptions for "NetBanking" folder in "NetBanking" target */,
+				5D59174E2CE14F9B0009A030 /* Exceptions for "NetBanking" folder in "NetBanking" target */,
 			);
 			path = NetBanking;
 			sourceTree = "<group>";
@@ -45,7 +45,7 @@
 		5D87C55D2CDCBCDE00887E89 = {
 			isa = PBXGroup;
 			children = (
-				5D87C5682CDCBCDE00887E89 /* NetBanking */,
+				5D5917442CE14F9B0009A030 /* NetBanking */,
 				5D87C5672CDCBCDE00887E89 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,7 +74,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				5D87C5682CDCBCDE00887E89 /* NetBanking */,
+				5D5917442CE14F9B0009A030 /* NetBanking */,
 			);
 			name = NetBanking;
 			packageProductDependencies = (
