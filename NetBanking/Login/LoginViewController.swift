@@ -29,16 +29,26 @@ class LoginViewController: UIViewController {
         loginView.passwordTextField.text
     }
     
+    //animation
+    var leadingEdgeOnScreen : CGFloat = 16
+    var leadingEdgeOffScreen : CGFloat = -1000
+    
+    var titleLeadingAnchor: NSLayoutConstraint?
+    var subtitleLeadingAnchor: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         style()
         layout()
     }
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidLoad()
         signingUpButton.configuration?.showsActivityIndicator = false
     }
-    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        animate()
+    }
     
 }
 
@@ -132,12 +142,12 @@ extension LoginViewController {
                     equalToSystemSpacingBelow: titleLabel.bottomAnchor,
                     multiplier: 1
                 ),
-            titleLabel.leadingAnchor
-                .constraint(equalTo: loginView.leadingAnchor),
             titleLabel.trailingAnchor
                 .constraint(equalTo: loginView.trailingAnchor)
-        ]
-)
+        ])
+        titleLeadingAnchor = titleLabel.leadingAnchor
+            .constraint(equalTo: view.leadingAnchor, constant: leadingEdgeOffScreen)
+        titleLeadingAnchor?.isActive = true
         
         //SubtitleLabel Constraints
         NSLayoutConstraint.activate(
@@ -147,18 +157,18 @@ extension LoginViewController {
                     equalToSystemSpacingBelow: subtitleLabel.bottomAnchor,
                     multiplier: 5
                 ),
-            subtitleLabel.leadingAnchor
-                .constraint(
-                    equalToSystemSpacingAfter: loginView.leadingAnchor,
-                    multiplier: 3
-                ),
             view.trailingAnchor
                 .constraint(
                     equalToSystemSpacingAfter: subtitleLabel.trailingAnchor,
                     multiplier: 3
                 )
-        ]
-)
+        ])
+        subtitleLeadingAnchor = subtitleLabel.leadingAnchor
+            .constraint(
+                equalTo: view.leadingAnchor,
+                constant: leadingEdgeOffScreen
+            )
+        subtitleLeadingAnchor?.isActive = true
         
     }
 }
@@ -173,12 +183,13 @@ extension LoginViewController {
             assertionFailure("User name or password is nil")
             return
         }
-        if userName.isEmpty || password.isEmpty {
-            showErrorMessage("Username / Password cannot be empty")
-            return
-        }
-        if userName == "Admin" && password == "admin" {
+//        if userName.isEmpty || password.isEmpty {
+//            showErrorMessage("Username / Password cannot be empty")
+//            return
+//        }
+        if userName == "" && password == "" {
             signingUpButton.configuration?.showsActivityIndicator = true
+            Thread.sleep(forTimeInterval: 0.5)
             delegate?.didLogin()
         }else {
             showErrorMessage("Invalid Username / Password")
@@ -187,5 +198,27 @@ extension LoginViewController {
     private func showErrorMessage(_ message: String) {
         errorMessageLabel.text = message
         errorMessageLabel.isHidden = false
+        shakeButton()
+    }
+}
+// MARK: - Animations
+extension LoginViewController {
+    private func animate() {
+        let animator1 = UIViewPropertyAnimator(duration: 0.5, curve: .easeInOut) {
+            self.titleLeadingAnchor?.constant = self.leadingEdgeOnScreen
+            self.subtitleLeadingAnchor?.constant = self.leadingEdgeOnScreen
+            self.view.layoutIfNeeded()
+        }
+        animator1.startAnimation()
+    }
+    private func shakeButton() {
+        let animation = CAKeyframeAnimation()
+        animation.keyPath = "position.x"
+        animation.values = [0, 10, -10, 10, 0]
+        animation.keyTimes = [0, 0.16, 0.5, 0.83, 1]
+        animation.duration = 0.4
+
+        animation.isAdditive = true
+        signingUpButton.layer.add(animation, forKey: "shake")
     }
 }

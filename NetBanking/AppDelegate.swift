@@ -33,9 +33,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().isTranslucent = false
         UINavigationBar.appearance().backgroundColor = appColour
         
-        window?.rootViewController = vc
+        window?.rootViewController = loginViewController
+        
+        registerForNotifications()
         
         return true
+    }
+    private func registerForNotifications(){
+        NotificationCenter.default
+            .addObserver(
+                self,
+                selector: #selector(didLogout),
+                name:.logout,
+                object: nil
+            )
     }
 
 }
@@ -47,6 +58,9 @@ extension AppDelegate : loginViewControllerDelegate{
         }else{
             setRootViewController(onboardingViewController)
         }
+    }
+    @objc func didLogout() {
+        setRootViewController(loginViewController)
     }
     
 }
